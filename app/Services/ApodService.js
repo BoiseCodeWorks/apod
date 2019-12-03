@@ -1,4 +1,5 @@
 import Store from "../store.js";
+import store from "../store.js";
 
 // @ts-ignore
 let _apodApi = axios.create({
@@ -8,14 +9,14 @@ let _apodApi = axios.create({
 
 class ApodService {
   search(date) {
-    _apodApi
-      .get("apod?api_key=DEMO_KEY&date=" + date)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    return _apodApi.get("apod?api_key=DEMO_KEY&date=" + date).then(res => {
+      store.commit("apod", res.data);
+    });
+  }
+
+  async searchAsync(date) {
+    let res = await _apodApi.get("apod?api_key=DEMO_KEY&date=" + date);
+    store.commit("apod", res.data);
   }
 }
 

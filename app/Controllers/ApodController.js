@@ -13,11 +13,29 @@ export default class ApodController {
     store.subscribe("apod", _draw);
   }
 
-  search() {
+  async search() {
     event.preventDefault();
     let form = event.target;
     // @ts-ignore
     let date = form.date.value;
-    ApodService.search(date)
+    try {
+      await ApodService.searchAsync(date);
+    } catch (e) {
+      let errorElem = document.getElementById("error");
+      errorElem.classList.remove("d-none");
+      errorElem.innerText = e.response.data.msg;
+    }
+  }
+
+  normalSearch() {
+    event.preventDefault();
+    let form = event.target;
+    // @ts-ignore
+    let date = form.date.value;
+    ApodService.searchAsync(date).catch(e => {
+      let errorElem = document.getElementById("error");
+      errorElem.classList.remove("d-none");
+      errorElem.innerText = e.response.data.msg;
+    });
   }
 }
